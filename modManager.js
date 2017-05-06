@@ -2,10 +2,10 @@ const Mods = require("./mods")
 
 class modManager{
 
-  constructor(){
+  constructor(client){
     this.mods = []
     Mods.forEach(el => {
-      this.mods.push(new el())
+      this.mods.push(new el(client))
     })
   }
 

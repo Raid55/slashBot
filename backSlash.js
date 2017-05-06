@@ -1,20 +1,20 @@
 const winston = require('winston');
-const prefix = "\\";
 winston.level = 'debug';
 
 const mm = require("./modManager.js")
 
 class BackSlash{
 
-  constructor(tok, client, apiAi){
+  constructor(prefix, tok, client, apiAi){
     this.client = client;
     this.client.login(tok);
     this.apiAi = apiAi;
-    this.modManager = new mm();
+    this.modManager = new mm(client);
+    this.prefix = prefix;
   }
 
   async run(){
-    const { client , apiAi, modManager} = this;
+    const { client , apiAi, modManager, prefix } = this;
 
     client
     .on('error', winston.error)
@@ -27,7 +27,7 @@ class BackSlash{
       `);
     })
     .on('reconnect', () => winston.warn('Reconnecting...please wait..'))
-    .on('disconnect', () => winston.warn('Disconnected...U got dun rickidy rekt SON'))
+    .on('disconnect', () => winston.error('Disconnected...U got dun rickidy rekt SON'))
     .on('message', (msg) => {
       //checking for false messages that we dont want to track
       if (msg.author.bot) return;

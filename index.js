@@ -18,6 +18,7 @@ winston.level = 'debug';
 
 //bot instance
 const bot = new BackSlash(
+  "\\",
   discordToken,
   new Discord.Client(),
   apiai(apiaiToken)
