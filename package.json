@@ -4,7 +4,7 @@
   "description": "A Discord Bot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "author": "Raid55",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "express": "^4.15.2",
     "ffmpeg-binaries": "^3.2.2-3",
     "node-opus": "^0.2.6",
+    "redis": "^2.7.1",
     "winston": "^2.3.1",
     "ytdl-core": "^0.13.1"
   }

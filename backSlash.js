@@ -5,12 +5,13 @@ const mm = require("./modManager.js")
 
 class BackSlash{
 
-  constructor(prefix, tok, client, apiAi){
-    this.client = client;
-    this.client.login(tok);
+  constructor(prefix, tok, client, apiAi, redis){
+    // this.redis = redis;
     this.apiAi = apiAi;
-    this.modManager = new mm(client);
+    this.client = client;
     this.prefix = prefix;
+    this.client.login(tok);
+    this.modManager = new mm(client, redis);
   }
 
   async run(){

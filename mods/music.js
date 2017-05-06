@@ -26,7 +26,8 @@ function ytConfig(q){
 
 class Music{
 
-  constructor(client){
+  constructor(client, redis){
+    this.redis = redis
     this.q = [];
     this.client = client;
   }

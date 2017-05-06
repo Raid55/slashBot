@@ -2,11 +2,12 @@ const Mods = require("./mods")
 
 class modManager{
 
-  constructor(client){
+  constructor(client, redis){
     this.mods = []
     Mods.forEach(el => {
-      this.mods.push(new el(client))
+      this.mods.push(new el(client, redis))
     })
+
   }
 
   async onMessage(msg, action){
