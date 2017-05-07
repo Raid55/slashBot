@@ -55,6 +55,18 @@ class Music{
       case "music.join":
         this.join(msg)
         break;
+      case "music.stop":
+        this.stop(msg)
+        break;
+      case "music.pause":
+        this.pause(msg)
+        break;
+      case "music.resume":
+        this.resume(msg)
+        break;
+      case "music.next":
+        this.next(msg)
+        break;
       default:
         return
     }
@@ -74,7 +86,6 @@ class Music{
 
     await redis.rpopAsync(msg.guild.id+":queue")
     .then(reply => {
-      console.log("inside redis rpop", reply);
       if(reply === null){
         msg.channel.sendMessage("no mousic to play")
       }else{
@@ -83,21 +94,26 @@ class Music{
       }
     })
     .catch(winston.error)
-    console.log("before it all goes wrong");
 
     dispatcher
-      .on("start", start => {
-        console.log("Started Audio: ", start);
+      .on("start", () => {
+        console.log("Started Audio");
       })
       .on("end", end => {
-        console.log("im triggered", end)
-        dispatcher = null
-        this._next(msg)
+        console.log("Audio ending: ", end)
+        if(end === "user"){
+          console.log("User stop tha music");
+          dispatcher = null
+        }else{
+          // msg.channel.sendMessage("That was the last song and/or there was a small error, if thats the case just play again")
+          console.log("Stream ran out, switching songs...");
+          dispatcher = null
+          this._next(msg)
+        }
       })
       .on("error", err =>{
-        console.log("voiceConn Event err: ", err);
+        console.log("Dispatcher Event err: ", err);
       })
-    console.log("after voice");
     return;
   }
 
@@ -105,9 +121,31 @@ class Music{
     this.play(msg)
   }
 
+  next(msg){
+    const { client } = this;
+    let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
+    dispatcher.end()
+    this._next(msg)
+
+  }
+
+
+  async stop(msg){
+    const { client } = this;
+    let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
+    dispatcher.end()
+  }
 
   async pause(msg){
+    const { client } = this;
+    let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
+    dispatcher.pause()
+  }
 
+  async resume(msg){
+    const { client } = this;
+    let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
+    dispatcher.resume()
   }
 
   async join(msg){
@@ -138,6 +176,7 @@ class Music{
     })
     .catch(err => {
       console.log('ERROR ERROR', err);
+      msg.channel.sendMessage('We could not find the song you asked for... we looked for it everywhere.')
     });
 
   }
