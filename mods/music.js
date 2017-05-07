@@ -10,23 +10,6 @@ winston.level = 'debug';
 
 const streamOptions = { seek: 0, volume: 1 };
 
-function ytConfig(q){
-  return {
-    method: 'GET',
-    url: "https://www.googleapis.com/youtube/v3/search",
-    headers: {
-      'accept': 'application/json',
-      'content-type': 'application/json'
-    },
-    params:{
-      key: googleKey,
-      type: "video",
-      part: "snippet",
-      q: q,
-    }
-  }
-}
-
 class Music{
 
 //@TODO i still need to promisify the whole redis thing cause its looking clutered with all the error handling and stuff,
@@ -41,6 +24,23 @@ class Music{
   constructor(client, redis){
     this.redis = redis
     this.client = client;
+  }
+
+  _ytConfig(q){
+    return {
+      method: 'GET',
+      url: "https://www.googleapis.com/youtube/v3/search",
+      headers: {
+        'accept': 'application/json',
+        'content-type': 'application/json'
+      },
+      params:{
+        key: googleKey,
+        type: "video",
+        part: "snippet",
+        q: q,
+      }
+    }
   }
 
   async onMessage(msg, action){
@@ -61,46 +61,50 @@ class Music{
   }
 
   async play(msg){
-    const { redis, client, play } = this;
-    //checking if the server q is empty or not
-    //getting next song on list
-    redis.rpop(msg.guild.id+":queue", function(err,reply){
-      if(err){
-        console.log(err)
-        return
-      }else if(reply === null){
+    const { redis, client, _playNext, play } = this;
+    let dispatcher;
+
+    let voiceConn = client.channels.get(msg.member.voiceChannelID).connection
+
+    if(voiceConn === null){
+      msg.channel.sendMessage("Not in your channel, how am I supposed to play music")
+      console.log("not in channel...music not played");
+      return;
+    }
+
+    await redis.rpopAsync(msg.guild.id+":queue")
+    .then(reply => {
+      console.log("inside redis rpop", reply);
+      if(reply === null){
         msg.channel.sendMessage("no mousic to play")
-        return;
       }else{
         let stream = ytdl(`https://youtu.be/${reply}`, {filter : 'audioonly'});
-        // there is a bug that once you press pause the q is shited cuz the stop speaking event is stoped... find a way to fix
-        let voiceConn = client.channels.get(msg.member.voiceChannelID).connection
-        if(voiceConn === null){
-          msg.channel.sendMessage("Not in your channel, how am I supposed to play music")
-          console.log("not in channel...music not played");
-          //adding song back to redis
-          redis.rpush(msg.guild.id+":queue",reply, function(err,rep){
-            if(err){
-              console.log(err);
-            }
-          })
-        }else{
-          voiceConn.playStream(stream, streamOptions)
-          // this dosent work, need to find a way to the loop the q seemlessly acros all diffrent discord servers.
-          .on("end", end => {
-            console.log("im triggered", end)
-            // play(msg)
-          })
-          .on("error", winston.error)
-        }
+        dispatcher = voiceConn.playStream(stream, streamOptions)
       }
     })
+    .catch(winston.error)
+    console.log("before it all goes wrong");
+
+    dispatcher
+      .on("start", start => {
+        console.log("Started Audio: ", start);
+      })
+      .on("end", end => {
+        console.log("im triggered", end)
+        dispatcher = null
+        this._next(msg)
+      })
+      .on("error", err =>{
+        console.log("voiceConn Event err: ", err);
+      })
+    console.log("after voice");
     return;
   }
 
-  async _playNext(msg){
-
+  _next(msg){
+    this.play(msg)
   }
+
 
   async pause(msg){
 
@@ -115,21 +119,22 @@ class Music{
         msg.channel.sendMessage("im in...now what")
         return;
       })
-      .catch(winston.error)
+      .catch(err => {
+        console.log("join err: ", err);
+      })
   }
 
   async addToQueue(msg, action){
-    const { redis } = this;
-    axios.request(ytConfig(action.result.parameters.any))
+    const { redis, _ytConfig } = this;
+    axios.request(_ytConfig(action.result.parameters.any))
     .then(result => {
       console.log(msg.guild.id+":queue");
-      redis.lpush(msg.guild.id+":queue", result.data.items[0].id.videoId , function(err,reply){
-        if(err){
-          console.log(err)
-          return
-        }
+      redis.lpushAsync(msg.guild.id+":queue", result.data.items[0].id.videoId)
+      .then(reply =>{
+        console.log(reply);
         msg.channel.sendMessage(`Added: ${result.data.items[0].snippet.title}`)
       })
+      .catch(winston.error)
     })
     .catch(err => {
       console.log('ERROR ERROR', err);

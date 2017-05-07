@@ -11,6 +11,8 @@ const client = new Discord.Client();
 //backslash the bot
 const BackSlash = require("./backSlash.js")
 
+//BluebirdJs
+var bluebird = require("bluebird");
 
 //API.AI connection
 const apiai = require('apiai');
@@ -22,7 +24,10 @@ winston.level = 'debug';
 
 //Redis connection and event listeners
 const redis = require("redis")
-const redisClient = redis.createClient(redisOptions)
+bluebird.promisifyAll(redis.RedisClient.prototype);
+bluebird.promisifyAll(redis.Multi.prototype);
+const redisClient = redis.createClient(redisOptions);
+
 
 redisClient
   .on("ready", () => {
