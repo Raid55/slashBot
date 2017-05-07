@@ -26,6 +26,7 @@ class BackSlash{
       Logged in as ${client.user.username}
       Waiting for input...
       `);
+    // console.log(client.guilds.find('name', 'Mao Zedong Communication'));
     })
     .on('reconnect', () => winston.warn('Reconnecting...please wait..'))
     .on('disconnect', () => winston.error('Disconnected...U got dun rickidy rekt SON'))
