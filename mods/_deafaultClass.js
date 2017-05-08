@@ -2,12 +2,17 @@
 
 
 class whatever{
-  //all classes will be called with the action so its important to return if the action doesent match
-  async onMessage(msg, action){
-    //return anything that isent
-    if(action.result.action !== "input.welcome") return;
-    //and then send to aproptriate method once idetified
-    this.apropriateMethod(msg)
+  //send the nlp[1] thrw this switch statment and route them to appropriate methodes
+  async onAction(msg, nlp){
+    switch(nlp.action[1]){
+
+      case "some secondary action":
+        this.whateves()
+        break;
+
+      default:
+        return
+    }
   }
 
   async apropriateMethod(msg){
