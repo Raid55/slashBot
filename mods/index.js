@@ -1,5 +1,5 @@
 const Music = require("./music.js")
 
 module.exports = [
-  Music
+  "music", Music
 ]

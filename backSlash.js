@@ -1,7 +1,7 @@
 const winston = require('winston');
 winston.level = 'debug';
 
-const mm = require("./modManager.js")
+const mr = require("./msgRouter.js")
 
 class BackSlash{
 
@@ -11,12 +11,12 @@ class BackSlash{
     this.client = client;
     this.prefix = prefix;
     this.client.login(tok);
-    this.modManager = new mm(client, redis);
+    this.msgRouter = new mr(client, redis);
     this.authList = ['191612587966857226', '272238351564668928', '180229243903410176'];
   }
 
   async run(){
-    const { client , apiAi, modManager, prefix, authList } = this;
+    const { client , apiAi, msgRouter, prefix, authList } = this;
 
     client
     .on('error', winston.error)
@@ -52,19 +52,29 @@ class BackSlash{
             User Message: ${msg.content}
             API.AI Action: ${response.result.action}
           `)
-          if(response.result.action.slice(0,9) === "smalltalk"){
-            msg.channel.sendMessage(response.result.fulfillment.speech)
-          }else if(response.result.action === "input.unknown"){
-            msg.reply(response.result.fulfillment.speech)
-          }else if(response.result.action === "input.welcome"){
-            msg.reply(response.result.fulfillment.speech)
+          //error handling
+          if(response.status.code !== 200){
+            winston.error(
+              response.status.code,
+              response.status.errorType
+            )
+            return;
           }else{
-            modManager.onMessage(msg, response)
+            //send msg to the msgRouter
+            //slicing the action into array for cleaner and better(hopefuly) code
+            msgRouter.mainRoute(msg, {
+              action: response.result.action.split("."),
+              params: response.result.parameters,
+              speech: response.result.fulfillment.speech
+            })
           }
         })
         .on("error", winston.error)
       //end API.AI request. This has to be here as per the APIAI docs
       apiReq.end();
+    })
+    .on("guildCreate", guild =>{
+      console.log("cool stuff a guild was just joind in tha client", guild)
     })
   }
 

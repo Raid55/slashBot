@@ -43,28 +43,27 @@ class Music{
     }
   }
 
-  async onMessage(msg, action){
-    if(action.result.action.slice(0, 5) !== "music") return;
-    switch(action.result.action){
-      case "music.q+":
-        this.addToQueue(msg, action)
+  async onAction(msg, nlp){
+    switch(nlp.action[1]){
+      case "q+":
+        this.addToQueue(msg, nlp)
         break;
-      case "music.play" :
+      case "play" :
         this.play(msg)
         break;
-      case "music.join":
+      case "join":
         this.join(msg)
         break;
-      case "music.stop":
+      case "stop":
         this.stop(msg)
         break;
-      case "music.pause":
+      case "pause":
         this.pause(msg)
         break;
-      case "music.resume":
+      case "resume":
         this.resume(msg)
         break;
-      case "music.next":
+      case "next":
         this.next(msg)
         break;
       default:
@@ -162,9 +161,9 @@ class Music{
       })
   }
 
-  async addToQueue(msg, action){
+  async addToQueue(msg, nlp){
     const { redis, _ytConfig } = this;
-    axios.request(_ytConfig(action.result.parameters.any))
+    axios.request(_ytConfig(nlp.params.any))
     .then(result => {
       console.log(msg.guild.id+":queue");
       redis.lpushAsync(msg.guild.id+":queue", result.data.items[0].id.videoId)
