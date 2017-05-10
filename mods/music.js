@@ -20,10 +20,13 @@ class Music{
 //the guild id out of the message in the dispatcher and pass that along to all methods. I could then send message to servers
 //using the client and the server id and channel id, on second thought maybe even make a custom object with all the ids i need
 //instead of a bulky and messy msg object with all the shit in it
+//this makes sense, it would be nice to send thru the server id and pack the msg and the nlp in one, and use the client.channel.get
+//to get the channel and send a message.
 
   constructor(client, redis){
-    this.redis = redis
     this.client = client;
+    this.redis = redis;
+    this.streamOptions = { seek: 0, volume: 1 };
   }
 
   _ytConfig(q){
@@ -72,7 +75,7 @@ class Music{
   }
 
   async play(msg){
-    const { redis, client, _playNext, play } = this;
+    const { redis, client, _playNext, play, streamOptions } = this;
     let dispatcher;
 
     let voiceConn = client.channels.get(msg.member.voiceChannelID).connection
@@ -128,7 +131,6 @@ class Music{
 
   }
 
-
   async stop(msg){
     const { client } = this;
     let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
@@ -183,7 +185,6 @@ class Music{
   async searchAndDownload(msg, action){
 
   }
-
 
 
 }

@@ -12,6 +12,7 @@ class BackSlash{
     this.prefix = prefix;
     this.client.login(tok);
     this.msgRouter = new mr(client, redis);
+    //this is temporary...just for now
     this.authList = ['191612587966857226', '272238351564668928', '180229243903410176'];
   }
 
@@ -57,7 +58,7 @@ class BackSlash{
             winston.error(
               response.status.code,
               response.status.errorType
-            )
+            );
             return;
           }else{
             //send msg to the msgRouter
