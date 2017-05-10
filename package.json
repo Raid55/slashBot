@@ -1,10 +1,13 @@
 {
-  "name": "r-bot",
+  "name": "backSlash",
   "version": "1.0.0",
   "description": "A Discord Bot",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
+  },
+  "engines": {
+    "node": "7.9.0"
   },
   "author": "Raid55",
   "license": "ISC",
