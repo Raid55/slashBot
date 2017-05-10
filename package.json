@@ -4,7 +4,7 @@
   "description": "A Discord Bot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js -p $PORT"
+    "start": "node -p $PORT index.js"
   },
   "engines": {
     "node": "7.9.0"
