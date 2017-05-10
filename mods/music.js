@@ -8,8 +8,6 @@ const axios = require('axios');
 const winston = require('winston');
 winston.level = 'debug';
 
-const streamOptions = { seek: 0, volume: 1 };
-
 class Music{
 
 //@TODO i still need to promisify the whole redis thing cause its looking clutered with all the error handling and stuff,
@@ -76,9 +74,11 @@ class Music{
 
   async play(msg){
     const { redis, client, _playNext, play, streamOptions } = this;
+    //make sure this works, basicly im checking to see if there is a dispatcher. if there is then i can resume it, in case people mistake
+    // the resume action with the play action.
+    let voiceConn = client.channels.get(msg.member.voiceChannelID).connection
     let dispatcher;
 
-    let voiceConn = client.channels.get(msg.member.voiceChannelID).connection
 
     if(voiceConn === null){
       msg.channel.sendMessage("Not in your channel, how am I supposed to play music")
@@ -86,13 +86,20 @@ class Music{
       return;
     }
 
+    if(voiceConn.player.dispatcher){
+      voiceConn.player.dispatcher.resume()
+      return;
+    }
+
     await redis.rpopAsync(msg.guild.id+":queue")
     .then(reply => {
       if(reply === null){
-        msg.channel.sendMessage("no mousic to play")
+        msg.channel.send("no mousic to play")
       }else{
-        let stream = ytdl(`https://youtu.be/${reply}`, {filter : 'audioonly'});
-        dispatcher = voiceConn.playStream(stream, streamOptions)
+        dispatcher = voiceConn.playStream(
+          ytdl(`https://youtu.be/${reply}`, {filter : 'audioonly'}),
+          streamOptions
+        )
       }
     })
     .catch(winston.error)
@@ -125,10 +132,14 @@ class Music{
 
   next(msg){
     const { client } = this;
-    let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
-    dispatcher.end()
-    this._next(msg)
-
+    try{
+      let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
+      dispatcher.end()
+      this._next(msg)
+    }catch(err){
+      winston.info("No song connection: ",err)
+    }
+    return;
   }
 
   async stop(msg){

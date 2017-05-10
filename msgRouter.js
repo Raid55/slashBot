@@ -28,7 +28,11 @@ class msgRouter{
         break;
 
       case "smalltalk":
-        msg.channel.sendMessage(nlp.speech)
+        msg.channel.send(nlp.speech)
+        break;
+
+      case "requests":
+        mods["requests"].onAction(msg, nlp)
         break;
 
       default:

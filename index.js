@@ -31,10 +31,10 @@ const redisClient = redis.createClient(redisOptions);
 
 redisClient
   .on("ready", () => {
-    winston.info("Redis is ready... waiting for connection...")
+    winston.info("Redis is ready... ready for commands...")
   })
   .on("connect", () => {
-    winston.info("Redis is connected...ready for commands")
+    winston.info("Redis is connected to db...")
   })
   .on("reconnecting", () => {
     winston.info("Redis is reconnecting...please hold...")
