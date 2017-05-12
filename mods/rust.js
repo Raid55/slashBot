@@ -6,8 +6,8 @@ class rust{
   async onAction(msg, nlp){
     switch(nlp.action[1]){
 
-      case "":
-//code b here
+      case "howManyFor":
+        this.howManyFor(msg, nlp)
         break;
 
       case "" :
@@ -17,6 +17,10 @@ class rust{
       default:
         return;
     }
+  }
+
+  async howManyFor(msg, nlp){
+
   }
 
 }

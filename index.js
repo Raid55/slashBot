@@ -8,8 +8,8 @@ const prefix = "\\"
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
-//backslash the bot
-const BackSlash = require("./backSlash.js")
+//slashBot the bot
+const slashBot = require("./slashBot.js")
 
 //BluebirdJs
 var bluebird = require("bluebird");
@@ -48,7 +48,7 @@ redisClient
 
 
 //bot instance
-const bot = new BackSlash(
+const bot = new slashBot(
   prefix,
   discordToken,
   new Discord.Client(),

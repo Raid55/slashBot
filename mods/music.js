@@ -77,7 +77,7 @@ class Music{
     //make sure this works, basicly im checking to see if there is a dispatcher. if there is then i can resume it, in case people mistake
     // the resume action with the play action.
     let voiceConn = client.channels.get(msg.member.voiceChannelID).connection
-    let dispatcher;
+    let dispatcher= null;
 
 
     if(voiceConn === null){
@@ -103,6 +103,8 @@ class Music{
       }
     })
     .catch(winston.error)
+    //returns if there is no song to play to avoid a bug that trigers dispatcher.on when dispatcher is null
+    if(dispatcher === null) return;
 
     dispatcher
       .on("start", () => {
@@ -166,7 +168,7 @@ class Music{
       .join()
       .then(connection => {
         console.log('Connected')
-        msg.channel.sendMessage("im in...now what")
+        msg.channel.send("im in...now what?")
         return;
       })
       .catch(err => {

@@ -3,7 +3,7 @@ winston.level = 'debug';
 
 const mr = require("./msgRouter.js")
 
-class BackSlash{
+class slashBot{
 
   constructor(prefix, tok, client, apiAi, redis){
     // this.redis = redis;
@@ -49,7 +49,8 @@ class BackSlash{
         .on('response', (response) =>{
           //log message and action to winston
           winston.info(`
-            Username: ${msg.author.username}
+            Server: ${msg.guild.name} | ${msg.guild.id}
+            Username: ${msg.author.username} | ${msg.author.id}
             User Message: ${msg.content}
             API.AI Action: ${response.result.action}
           `)
@@ -70,7 +71,15 @@ class BackSlash{
             })
           }
         })
-        .on("error", winston.error)
+        .on("error", (err) =>{
+          winston.error(`
+            Server: ${msg.guild.name} | ${msg.guild.id}
+            Username: ${msg.author.username} | ${msg.author.id}
+            User Message: ${msg.content}
+            Error Stack:
+            ${err}
+            `)
+        }
       //end API.AI request. This has to be here as per the APIAI docs
       apiReq.end();
     })
@@ -81,4 +90,4 @@ class BackSlash{
 
 }
 
-module.exports = BackSlash;
+module.exports = slashBot;
