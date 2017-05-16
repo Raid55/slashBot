@@ -79,7 +79,7 @@ class slashBot{
             Error Stack:
             ${err}
             `)
-        }
+        })
       //end API.AI request. This has to be here as per the APIAI docs
       apiReq.end();
     })

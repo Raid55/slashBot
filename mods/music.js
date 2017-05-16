@@ -67,18 +67,20 @@ class Music{
       case "next":
         this.next(msg)
         break;
+      case "leave":
+        this.leave(msg)
+        break;
       default:
         return
     }
   }
 
   async play(msg){
-    const { redis, client, _playNext, play, streamOptions } = this;
+    const { redis, client, _playNext, play, streamOptions, leave } = this;
     //make sure this works, basicly im checking to see if there is a dispatcher. if there is then i can resume it, in case people mistake
     // the resume action with the play action.
     let voiceConn = client.channels.get(msg.member.voiceChannelID).connection
     let dispatcher= null;
-
 
     if(voiceConn === null){
       msg.channel.sendMessage("Not in your channel, how am I supposed to play music")
@@ -95,7 +97,12 @@ class Music{
     .then(reply => {
       if(reply === null){
         msg.channel.send("no mousic to play")
+        let disconTimeout = setTimeout(leave.bind(this, msg, client), 15000)
+        console.log(disconTimeout);
       }else{
+        if(disconTimeout){
+          clearTimeout(disconTimeout);
+        }
         dispatcher = voiceConn.playStream(
           ytdl(`https://youtu.be/${reply}`, {filter : 'audioonly'}),
           streamOptions
@@ -136,6 +143,7 @@ class Music{
     const { client } = this;
     try{
       let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
+      if(!dispatcher) return;
       dispatcher.end()
       this._next(msg)
     }catch(err){
@@ -144,21 +152,24 @@ class Music{
     return;
   }
 
-  async stop(msg){
+  stop(msg){
     const { client } = this;
     let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
+    if(!dispatcher) return;
     dispatcher.end()
   }
 
-  async pause(msg){
+  pause(msg){
     const { client } = this;
     let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
+    if(!dispatcher) return;
     dispatcher.pause()
   }
 
-  async resume(msg){
+  resume(msg){
     const { client } = this;
     let dispatcher = client.channels.get(msg.member.voiceChannelID).connection.player.dispatcher
+    if(!dispatcher) return;
     dispatcher.resume()
   }
 
@@ -174,6 +185,15 @@ class Music{
       .catch(err => {
         console.log("join err: ", err);
       })
+  }
+
+  leave(msg, client){
+    if(!client){
+      const { client } = this;
+    }
+    let connection = client.channels.get(msg.member.voiceChannelID).connection
+    if(!connection) return;
+    connection.disconnect()
   }
 
   async addToQueue(msg, nlp){
