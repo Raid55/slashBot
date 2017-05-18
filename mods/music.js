@@ -71,7 +71,7 @@ class Music{
         this.leave(msg)
         break;
       default:
-        return
+        return;
     }
   }
 
