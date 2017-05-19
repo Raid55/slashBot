@@ -1,5 +1,5 @@
 //this is the config tokens
-const { discordToken, apiaiToken, redisOptions } = require('./config');
+const { discordToken, apiaiToken, redisOptions, mongoUrl } = require('./config');
 
 //message prefix
 const prefix = "\\"
@@ -21,6 +21,12 @@ const apiAi = apiai(apiaiToken);
 //WINSTOOOOOONNNNNN
 const winston = require('winston');
 winston.level = 'debug';
+
+//mongoose connection
+const mongoose = require("mongoose")
+const serverSchema = require("./models/server.js")
+const connection = mongoose.createConnection(mongoUrl)
+const Servers = connection.model('Servers', serverSchema)
 
 //Redis connection and event listeners
 const redis = require("redis")
@@ -53,7 +59,8 @@ const bot = new slashBot(
   discordToken,
   new Discord.Client(),
   apiai(apiaiToken),
-  redisClient
+  redisClient,
+  connection.model('Servers', serverSchema)
 )
 //async run of bot instance
 bot.run()

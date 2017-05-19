@@ -5,20 +5,22 @@ const mr = require("./msgRouter.js")
 
 class slashBot{
 
-  constructor(prefix, tok, client, apiAi, redis){
+  constructor(prefix, tok, client, apiAi, redis, mongoConn){
     // this.redis = redis;
     this.apiAi = apiAi;
     this.client = client;
     this.prefix = prefix;
+    this.redis = redis
     this.client.login(tok);
     this.msgRouter = new mr(client, redis);
+    this.Mongo = mongoConn
     //this is temporary...just for now
     this.authList = ['191612587966857226', '272238351564668928', '180229243903410176'];
   }
 
   async run(){
-    const { client , apiAi, msgRouter, prefix, authList } = this;
-
+    const { client , apiAi, msgRouter, prefix, authList, Mongo, redis } = this;
+    let servError = false;
     client
     .on('error', winston.error)
     .on('warn', winston.warn)
@@ -28,12 +30,42 @@ class slashBot{
       Logged in as ${client.user.username}
       Waiting for input...
       `);
+      Mongo.find({}, (err, servers) =>{
+        if(!err){
+          servers.forEach((el) =>{
+            try{
+              redis.hmsetAsync(`${el.id}:server`,{
+                id: el.id,
+                isOn: el.isOn,
+                name: el.name,
+                icon: el.icon
+              })
+              .then(response => response)
+              .catch(err => {throw err})
+              //@TODO here i was hoppinh i could also include a SADD for the mods online and a HMSET for the mod settings
+              //but since i dont really have a plan for it yet its not the most important so its whatevz
+              // await redis.hmset(`${el.id}:mods`,{})
+              // .catch(err => throw err)
+              // await redis.saddAsync(`${el.id}:mods:${el.}`)
+            }catch(err){
+              winston.error(err, " WHAT HAPPENED< BIG ERROR OMG THE WORLD IS .... acualy its fine just had a problem starting up the serv");
+              servError = false;
+              return;
+            }
+          })
+        }else{
+          winston.error(err, " WHAT HAPPENED< BIG ERROR OMG THE WORLD IS .... acualy its fine just had a problem starting up the serv");
+          servError = false;
+          return;
+        }
+      });
     // console.log(client.guilds.find('name', 'Mao Zedong Communication'));
     })
     .on('reconnect', () => winston.warn('Reconnecting...please wait..'))
     .on('disconnect', () => winston.error('Disconnected...U got dun rickidy rekt SON'))
     .on('message', (msg) => {
       //checking for false messages that we dont want to track
+      if(servError) return;
       if (msg.author.bot) return;
       if (msg.content[0] !== prefix) return;
       if (authList.indexOf(msg.author.id) === -1) return;

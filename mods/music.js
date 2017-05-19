@@ -187,10 +187,9 @@ class Music{
       })
   }
 
-  leave(msg, client){
-    if(!client){
-      const { client } = this;
-    }
+  leave(msg){
+    const { client } = this;
+
     let connection = client.channels.get(msg.member.voiceChannelID).connection
     if(!connection) return;
     connection.disconnect()
