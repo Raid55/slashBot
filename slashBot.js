@@ -71,6 +71,11 @@ class slashBot{
       if (authList.indexOf(msg.author.id) === -1) return;
       //slicing out the prefix whch is always the first character
       msg.content = msg.content.slice(1, msg.content.length);
+      if(msg.content === 'test'){
+        redis.lrangeAsync(`${msg.guild.id}:historyMusicQ`, -100, 100)
+        .then(console.log)
+        .catch(console.log)
+      }
       //sending message to API.AI to scan for entities and get action
       //user who sent the message is used as user id for API.AI
       const apiReq = apiAi.textRequest(msg.content, {

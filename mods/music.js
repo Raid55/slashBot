@@ -93,26 +93,34 @@ class Music{
       return;
     }
 
-    await redis.rpopAsync(msg.guild.id+":queue")
+    await redis.rpopAsync(msg.guild.id+":musicQ")
     .then(reply => {
       if(reply === null){
         msg.channel.send("no mousic to play")
-        let disconTimeout = setTimeout(leave.bind(this, msg, client), 15000)
-        console.log(disconTimeout);
       }else{
-        if(disconTimeout){
-          clearTimeout(disconTimeout);
-        }
+        //@TODO experiment to see if i can dissconnect the bot from a channel after inactive use to save mem
+        // obviusly this a bit tedius since clearTimeout returns a ciculair object thing and then its a mess
+        // maybe im gonna have to look into eventEmitters and/or redis expires even maybe something else
+        // if(disconTimeout){
+        //   let disconTimeout = setTimeout(leave.bind(this, msg, client), 15000)
+        //   clearTimeout(disconTimeout);
+        // }
+
+      redis.lpushAsync(msg.guild.id+":historyMusicQ", reply)
+        .catch(err =>{
+          throw err
+        })
+        console.log(reply);
+        reply = reply.split("|")[0];
+        console.log(`https://youtu.be/${reply}`);
         dispatcher = voiceConn.playStream(
-          ytdl(`https://youtu.be/${reply}`, {filter : 'audioonly'}),
-          streamOptions
-        )
+          ytdl(`https://youtu.be/${reply}`, {filter : 'audioonly'}), streamOptions)
       }
     })
     .catch(winston.error)
     //returns if there is no song to play to avoid a bug that trigers dispatcher.on when dispatcher is null
     if(dispatcher === null) return;
-
+    
     dispatcher
       .on("start", () => {
         console.log("Started Audio");
@@ -199,10 +207,11 @@ class Music{
     const { redis, _ytConfig } = this;
     axios.request(_ytConfig(nlp.params.any))
     .then(result => {
-      console.log(msg.guild.id+":queue");
-      redis.lpushAsync(msg.guild.id+":queue", result.data.items[0].id.videoId)
+      console.log(msg.guild.id+":musicQ");
+      console.log(result);
+      redis.lpushAsync(msg.guild.id+":musicQ", `${result.data.items[0].id.videoId}|${msg.author.username}|${msg.author.id}`)
       .then(reply =>{
-        console.log(reply);
+        console.log(result.data.items[0]);
         msg.channel.sendMessage(`Added: ${result.data.items[0].snippet.title}`)
       })
       .catch(winston.error)
