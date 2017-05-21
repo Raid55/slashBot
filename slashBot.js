@@ -1,12 +1,15 @@
 const winston = require('winston');
 winston.level = 'debug';
 
+// importing the message router
 const mr = require("./msgRouter.js")
 
 class slashBot{
-
+/*this is the slashbot class, it has everything it needs to handle incoming
+messages and dispatch them to the approptiate mod, it handles everything
+and sends the msg and the NLP package to the msgRouter which then routes
+it to approptiate mod with all the stuff it needs, like youtube URLS and so on...*/
   constructor(prefix, tok, client, apiAi, redis, mongoConn){
-    // this.redis = redis;
     this.apiAi = apiAi;
     this.client = client;
     this.prefix = prefix;
@@ -14,17 +17,32 @@ class slashBot{
     this.client.login(tok);
     this.msgRouter = new mr(client, redis);
     this.Mongo = mongoConn
-    //this is temporary...just for now
+    /*this is temporary...just for now. In the future this will be fetched via redis
+    also plannining to add more versitality and let user decide where and who is allowed
+    to send a msg to the bot. But for now this array contains the only 3 people who can use it while in dev.*/
     this.authList = ['191612587966857226', '272238351564668928', '180229243903410176'];
   }
 
   async run(){
+    // this is the main and only method that runs the entire bot
+    // It waits for msg event in order to route it and since it never returns
+    // it techniqualy never ends...
+
     const { client , apiAi, msgRouter, prefix, authList, Mongo, redis } = this;
     let servError = false;
     client
+    //logging errors on server startup...
     .on('error', winston.error)
+    //waring of any problems...
     .on('warn', winston.warn)
+    /* outputs a ready message that lets me know the serv is up and running
+    also used to update redis cache system, since I keep all important data
+    on mongo I need to update redis every time the server restarts so that data
+    can be persistant and in sync. I try to use redis as much as possible for
+    quiery performance and trying to build scafolding for scalabilitiy. */
     .on('ready', () => {
+      //@TODO tidy up this sections its a foken mess, maybe im thinking that i can make a
+      // file with a function that can just do this so I dont have to cluter the work space
       winston.log("info", `
       Bot is now online and ready...
       Logged in as ${client.user.username}
