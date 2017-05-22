@@ -75,12 +75,16 @@ class Music{
     }
   }
 
-  async play(msg){
+  async play(msg, timeout){
     const { redis, client, _playNext, play, streamOptions, leave } = this;
     //make sure this works, basicly im checking to see if there is a dispatcher. if there is then i can resume it, in case people mistake
     // the resume action with the play action.
     let voiceConn = client.channels.get(msg.member.voiceChannelID).connection
     let dispatcher= null;
+    let disconTimeout = null
+    if(!timeout){
+      disconTimeout = timeout
+    }
 
     if(voiceConn === null){
       msg.channel.sendMessage("Not in your channel, how am I supposed to play music")
@@ -97,19 +101,22 @@ class Music{
     .then(reply => {
       if(reply === null){
         msg.channel.send("no mousic to play")
+        if(!disconTimeout){
+          disconTimeout = client.setTimeout(leave.bind(this, msg, client), 10000)
+        }
       }else{
-        //@TODO experiment to see if i can dissconnect the bot from a channel after inactive use to save mem
+        // @TODO experiment to see if i can dissconnect the bot from a channel after inactive use to save mem
         // obviusly this a bit tedius since clearTimeout returns a ciculair object thing and then its a mess
         // maybe im gonna have to look into eventEmitters and/or redis expires even maybe something else
-        // if(disconTimeout){
-        //   let disconTimeout = setTimeout(leave.bind(this, msg, client), 15000)
-        //   clearTimeout(disconTimeout);
-        // }
+        console.log(disconTimeout);
+        if(disconTimeout){
+          client.clearTimeout(disconTimeout);
+        }
 
-      redis.lpushAsync(msg.guild.id+":historyMusicQ", reply)
-        .catch(err =>{
-          throw err
-        })
+        redis.lpushAsync(msg.guild.id+":historyMusicQ", reply)
+          .catch(err =>{
+            throw err
+          })
         console.log(reply);
         reply = reply.split("|")[0];
         console.log(`https://youtu.be/${reply}`);
@@ -120,7 +127,7 @@ class Music{
     .catch(winston.error)
     //returns if there is no song to play to avoid a bug that trigers dispatcher.on when dispatcher is null
     if(dispatcher === null) return;
-    
+
     dispatcher
       .on("start", () => {
         console.log("Started Audio");
@@ -134,7 +141,7 @@ class Music{
           // msg.channel.sendMessage("That was the last song and/or there was a small error, if thats the case just play again")
           console.log("Stream ran out, switching songs...");
           dispatcher = null
-          this._next(msg)
+          this._next(msg, disconTimeout)
         }
       })
       .on("error", err =>{
@@ -143,8 +150,8 @@ class Music{
     return;
   }
 
-  _next(msg){
-    this.play(msg)
+  _next(msg, timeout){
+    this.play(msg, timeout)
   }
 
   next(msg){
@@ -195,8 +202,10 @@ class Music{
       })
   }
 
-  leave(msg){
-    const { client } = this;
+  leave(msg, client){
+    if(!client){
+      const { client } = this;
+    }
 
     let connection = client.channels.get(msg.member.voiceChannelID).connection
     if(!connection) return;
