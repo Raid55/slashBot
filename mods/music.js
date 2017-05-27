@@ -1,12 +1,12 @@
 const fs = require('fs');
 const ytdl = require('ytdl-core');
 
-const { googleKey } = require('../config');
+const { googleKey, winston } = require('../config');
 
 const axios = require('axios');
 
 const winston = require('winston');
-winston.level = 'debug';
+winston.level = winston;
 
 class Music{
 
@@ -68,7 +68,7 @@ class Music{
         this.next(msg)
         break;
       case "leave":
-        this.leave(msg)
+        this.leave(msg, this.client)
         break;
       default:
         return;
@@ -101,17 +101,18 @@ class Music{
     .then(reply => {
       if(reply === null){
         msg.channel.send("no mousic to play")
-        if(!disconTimeout){
-          disconTimeout = client.setTimeout(leave.bind(this, msg, client), 10000)
-        }
+        //Still being tested
+        // if(!disconTimeout){
+        //   disconTimeout = client.setTimeout(leave.bind(this, msg, client), 10000)
+        // }
       }else{
         // @TODO experiment to see if i can dissconnect the bot from a channel after inactive use to save mem
         // obviusly this a bit tedius since clearTimeout returns a ciculair object thing and then its a mess
         // maybe im gonna have to look into eventEmitters and/or redis expires even maybe something else
-        console.log(disconTimeout);
-        if(disconTimeout){
-          client.clearTimeout(disconTimeout);
-        }
+        // console.log(disconTimeout);
+        // if(disconTimeout){
+        //   client.clearTimeout(disconTimeout);
+        // }
 
         redis.lpushAsync(msg.guild.id+":historyMusicQ", reply)
           .catch(err =>{
@@ -203,13 +204,9 @@ class Music{
   }
 
   leave(msg, client){
-    if(!client){
-      const { client } = this;
-    }
-
-    let connection = client.channels.get(msg.member.voiceChannelID).connection
+    let connection = client.channels.get(msg.member.voiceChannelID).connection;
     if(!connection) return;
-    connection.disconnect()
+    connection.disconnect();
   }
 
   async addToQueue(msg, nlp){
@@ -217,7 +214,6 @@ class Music{
     axios.request(_ytConfig(nlp.params.any))
     .then(result => {
       console.log(msg.guild.id+":musicQ");
-      console.log(result);
       redis.lpushAsync(msg.guild.id+":musicQ", `${result.data.items[0].id.videoId}|${msg.author.username}|${msg.author.id}`)
       .then(reply =>{
         console.log(result.data.items[0]);

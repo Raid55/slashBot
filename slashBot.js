@@ -1,8 +1,9 @@
+const { winston } = require('./config');
 const winston = require('winston');
-winston.level = 'debug';
+winston.level = winston;
 
 // importing the message router
-const mr = require("./msgRouter.js")
+const mr = require("./utils/msgRouter.js")
 
 class slashBot{
 /*this is the slashbot class, it has everything it needs to handle incoming
@@ -102,12 +103,20 @@ it to approptiate mod with all the stuff it needs, like youtube URLS and so on..
       //waiting for API.AI to comeback with an actionable action
       apiReq
         .on('response', (response) =>{
-          //log message and action to winston
+          //make the nlp object so that its not clutured and and easyer to access
+          //also I want to point out that I spliting the action which comes in a string, so now its an array... i like arrays...
+          let nlp = {
+            action: response.result.action.split("."),
+            params: response.result.parameters,
+            speech: response.result.fulfillment.speech
+          }
+          //Logging when message is processed to make it look cool when the bot will be live,
+          //like im gonna be watching the message roll in like a boss and feel so much better than if I couldent print this vital information lololo
           winston.info(`
             Server: ${msg.guild.name} | ${msg.guild.id}
             Username: ${msg.author.username} | ${msg.author.id}
             User Message: ${msg.content}
-            API.AI Action: ${response.result.action}
+            API.AI Action: ${nlp.action}
           `)
           //error handling
           if(response.status.code !== 200){
@@ -118,12 +127,12 @@ it to approptiate mod with all the stuff it needs, like youtube URLS and so on..
             return;
           }else{
             //send msg to the msgRouter
-            //slicing the action into array for cleaner and better(hopefuly) code
-            msgRouter.mainRoute(msg, {
-              action: response.result.action.split("."),
-              params: response.result.parameters,
-              speech: response.result.fulfillment.speech
-            })
+            try{
+              msgRouter.mainRoute[nlp.action[0]](msg, nlp)
+            }catch(err){
+              winston.error(err)
+              return;
+            }
           }
         })
         .on("error", (err) =>{
@@ -141,8 +150,10 @@ it to approptiate mod with all the stuff it needs, like youtube URLS and so on..
     .on("guildCreate", guild =>{
       console.log("cool stuff a guild was just joind in tha client", guild)
     })
+    .on("presenceUpdate", (old, notOld) =>{
+      console.log("I get this", old, notOld)
+    })
   }
-
 }
 
 module.exports = slashBot;

@@ -2,12 +2,12 @@ const { winston } = require('./config');
 const winston = require('winston');
 winston.level = winston;
 
-class rust{
+class playtime{
 
   async onAction(msg, nlp){
     switch(nlp.action[1]){
 
-      case "howManyFor":
+      case "":
         this.howManyFor(msg, nlp)
         break;
 
@@ -26,4 +26,4 @@ class rust{
 
 }
 
-module.exports = rust
+module.exports = playtime

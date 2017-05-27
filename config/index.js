@@ -8,5 +8,6 @@ module.exports = {
   redisOptions:{
     url: process.env.REDIS_URL,
     password: process.env.REDIS_PASSWORD
-  }
+  },
+  winston: process.env.WINSTON
 };

@@ -9,7 +9,7 @@ and returns actions and entities so that the logic can run.
 */
 
 //Importing all configs from config file/ node env
-const { discordToken, apiaiToken, redisOptions, mongoUrl } = require('./config');
+const { discordToken, apiaiToken, redisOptions, mongoUrl, winston } = require('./config');
 
 //Prefix that the user need in order to type before message to bot
 const prefix = "\\"
@@ -30,7 +30,7 @@ const apiAi = apiai(apiaiToken);
 
 //WINSTOOOOOONNNNNN
 const winston = require('winston');
-winston.level = 'debug';
+winston.level = winston;
 
 //mongoose connection
 const mongoose = require("mongoose")

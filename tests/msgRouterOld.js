@@ -16,10 +16,7 @@ class msgRouter{
 
   //the main route basicly takes the first element in the action aray and tests for that... from there it goes on to the subroutes
   async mainRoute(msg, nlp){
-    const {
-      mods,
-      music_subRoute
-     } = this;
+    const { mods, music_subRoute } = this;
 
     switch(nlp.action[0]){
 
@@ -27,12 +24,12 @@ class msgRouter{
         mods["music"].onAction(msg, nlp)
         break;
 
-      case "smalltalk":
-        msg.channel.send(nlp.speech)
-        break;
-
       case "requests":
         mods["requests"].onAction(msg, nlp)
+        break;
+
+      case "smalltalk":
+        msg.channel.send(nlp.speech)
         break;
 
       default:
@@ -46,5 +43,6 @@ class msgRouter{
   }
 
 }
+
 
 module.exports = msgRouter
