@@ -12,5 +12,9 @@
     name: "the server name",
     icon: "server icon for website"
   },
-  "{id}:mods":['music'],
+  "{id}:mods":{
+    music: true,
+    playtime: false,
+    whatever: "this one basicly adds true if the mod is online and false or non existant if the mod is not there"
+  },
 }
