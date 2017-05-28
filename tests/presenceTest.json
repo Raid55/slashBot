@@ -1,0 +1,318 @@
+on game launch
+{
+    "guild": {
+        "members": {},
+        "channels": {},
+        "roles": {},
+        "presences": {},
+        "available": true,
+        "id": "191613035612209152",
+        "name": "Mao Zedong Communication",
+        "icon": "dcb9b8afc96b9d8ab171c9e14383af6a",
+        "splash": null,
+        "region": "eu-central",
+        "memberCount": 46,
+        "large": false,
+        "features": [],
+        "applicationID": null,
+        "afkTimeout": 300,
+        "afkChannelID": "205764941850869761",
+        "verificationLevel": 0,
+        "explicitContentFilter": 0,
+        "joinedTimestamp": 1494732558181,
+        "ownerID": "191612587966857226",
+        "_rawVoiceStates": {},
+        "emojis": {}
+    },
+    "user": {
+        "id": "191612587966857226",
+        "username": "Raidillon55",
+        "discriminator": "3382",
+        "avatar": "2e61cbcafdb99b637b24ee265a3bc83c",
+        "bot": false,
+        "lastMessageID": null,
+        "lastMessage": null
+    },
+    "_roles": [
+        "221306137914507266"
+    ],
+    "serverDeaf": false,
+    "serverMute": false,
+    "selfMute": true,
+    "selfDeaf": false,
+    "voiceSessionID": "6c73d241a21d8e6a8782655f809de430",
+    "voiceChannelID": "306102175996706816",
+    "speaking": false,
+    "nickname": null,
+    "joinedTimestamp": 1465754507690,
+    "lastMessageID": null,
+    "lastMessage": null,
+    "frozenPresence": {
+        "status": "online",
+        "game": null
+    }
+}
+WHAT???
+{
+    "guild": {
+        "members": {},
+        "channels": {},
+        "roles": {},
+        "presences": {},
+        "available": true,
+        "id": "191613035612209152",
+        "name": "Mao Zedong Communication",
+        "icon": "dcb9b8afc96b9d8ab171c9e14383af6a",
+        "splash": null,
+        "region": "eu-central",
+        "memberCount": 46,
+        "large": false,
+        "features": [],
+        "applicationID": null,
+        "afkTimeout": 300,
+        "afkChannelID": "205764941850869761",
+        "verificationLevel": 0,
+        "explicitContentFilter": 0,
+        "joinedTimestamp": 1494732558181,
+        "ownerID": "191612587966857226",
+        "_rawVoiceStates": {},
+        "emojis": {}
+    },
+    "user": {
+        "id": "191612587966857226",
+        "username": "Raidillon55",
+        "discriminator": "3382",
+        "avatar": "2e61cbcafdb99b637b24ee265a3bc83c",
+        "bot": false,
+        "lastMessageID": null,
+        "lastMessage": null
+    },
+    "_roles": [
+        "221306137914507266"
+    ],
+    "serverDeaf": false,
+    "serverMute": false,
+    "selfMute": true,
+    "selfDeaf": false,
+    "voiceSessionID": "6c73d241a21d8e6a8782655f809de430",
+    "voiceChannelID": "306102175996706816",
+    "speaking": false,
+    "nickname": null,
+    "joinedTimestamp": 1465754507690,
+    "lastMessageID": null,
+    "lastMessage": null
+}
+after game closes
+{
+    "guild": {
+        "members": {},
+        "channels": {},
+        "roles": {},
+        "presences": {},
+        "available": true,
+        "id": "191613035612209152",
+        "name": "Mao Zedong Communication",
+        "icon": "dcb9b8afc96b9d8ab171c9e14383af6a",
+        "splash": null,
+        "region": "eu-central",
+        "memberCount": 46,
+        "large": false,
+        "features": [],
+        "applicationID": null,
+        "afkTimeout": 300,
+        "afkChannelID": "205764941850869761",
+        "verificationLevel": 0,
+        "explicitContentFilter": 0,
+        "joinedTimestamp": 1494732558181,
+        "ownerID": "191612587966857226",
+        "_rawVoiceStates": {},
+        "emojis": {}
+    },
+    "user": {
+        "id": "191612587966857226",
+        "username": "Raidillon55",
+        "discriminator": "3382",
+        "avatar": "2e61cbcafdb99b637b24ee265a3bc83c",
+        "bot": false,
+        "lastMessageID": null,
+        "lastMessage": null
+    },
+    "_roles": [
+        "221306137914507266"
+    ],
+    "serverDeaf": false,
+    "serverMute": false,
+    "selfMute": true,
+    "selfDeaf": false,
+    "voiceSessionID": "6c73d241a21d8e6a8782655f809de430",
+    "voiceChannelID": "306102175996706816",
+    "speaking": false,
+    "nickname": null,
+    "joinedTimestamp": 1465754507690,
+    "lastMessageID": null,
+    "lastMessage": null,
+    "frozenPresence": {
+        "status": "online",
+        "game": {
+            "name": "Overwatch",
+            "type": 0,
+            "url": null
+        }
+    }
+}
+WHAT???
+{
+    "guild": {
+        "members": {},
+        "channels": {},
+        "roles": {},
+        "presences": {},
+        "available": true,
+        "id": "191613035612209152",
+        "name": "Mao Zedong Communication",
+        "icon": "dcb9b8afc96b9d8ab171c9e14383af6a",
+        "splash": null,
+        "region": "eu-central",
+        "memberCount": 46,
+        "large": false,
+        "features": [],
+        "applicationID": null,
+        "afkTimeout": 300,
+        "afkChannelID": "205764941850869761",
+        "verificationLevel": 0,
+        "explicitContentFilter": 0,
+        "joinedTimestamp": 1494732558181,
+        "ownerID": "191612587966857226",
+        "_rawVoiceStates": {},
+        "emojis": {}
+    },
+    "user": {
+        "id": "191612587966857226",
+        "username": "Raidillon55",
+        "discriminator": "3382",
+        "avatar": "2e61cbcafdb99b637b24ee265a3bc83c",
+        "bot": false,
+        "lastMessageID": null,
+        "lastMessage": null
+    },
+    "_roles": [
+        "221306137914507266"
+    ],
+    "serverDeaf": false,
+    "serverMute": false,
+    "selfMute": true,
+    "selfDeaf": false,
+    "voiceSessionID": "6c73d241a21d8e6a8782655f809de430",
+    "voiceChannelID": "306102175996706816",
+    "speaking": false,
+    "nickname": null,
+    "joinedTimestamp": 1465754507690,
+    "lastMessageID": null,
+    "lastMessage": null
+}
+
+not on the server
+
+{
+    "guild": {
+        "members": {},
+        "channels": {},
+        "roles": {},
+        "presences": {},
+        "available": true,
+        "id": "191613035612209152",
+        "name": "Mao Zedong Communication",
+        "icon": "dcb9b8afc96b9d8ab171c9e14383af6a",
+        "splash": null,
+        "region": "eu-central",
+        "memberCount": 46,
+        "large": false,
+        "features": [],
+        "applicationID": null,
+        "afkTimeout": 300,
+        "afkChannelID": "205764941850869761",
+        "verificationLevel": 0,
+        "explicitContentFilter": 0,
+        "joinedTimestamp": 1494732558181,
+        "ownerID": "191612587966857226",
+        "_rawVoiceStates": {},
+        "emojis": {}
+    },
+    "user": {
+        "id": "191612587966857226",
+        "username": "Raidillon55",
+        "discriminator": "3382",
+        "avatar": "2e61cbcafdb99b637b24ee265a3bc83c",
+        "bot": false,
+        "lastMessageID": null,
+        "lastMessage": null
+    },
+    "_roles": [
+        "221306137914507266"
+    ],
+    "serverDeaf": false,
+    "serverMute": false,
+    "selfMute": true,
+    "selfDeaf": false,
+    "voiceSessionID": "6c73d241a21d8e6a8782655f809de430",
+    "voiceChannelID": null,
+    "speaking": null,
+    "nickname": null,
+    "joinedTimestamp": 1465754507690,
+    "lastMessageID": null,
+    "lastMessage": null,
+    "frozenPresence": {
+        "status": "online",
+        "game": null
+    }
+}
+WHAT???
+{
+    "guild": {
+        "members": {},
+        "channels": {},
+        "roles": {},
+        "presences": {},
+        "available": true,
+        "id": "191613035612209152",
+        "name": "Mao Zedong Communication",
+        "icon": "dcb9b8afc96b9d8ab171c9e14383af6a",
+        "splash": null,
+        "region": "eu-central",
+        "memberCount": 46,
+        "large": false,
+        "features": [],
+        "applicationID": null,
+        "afkTimeout": 300,
+        "afkChannelID": "205764941850869761",
+        "verificationLevel": 0,
+        "explicitContentFilter": 0,
+        "joinedTimestamp": 1494732558181,
+        "ownerID": "191612587966857226",
+        "_rawVoiceStates": {},
+        "emojis": {}
+    },
+    "user": {
+        "id": "191612587966857226",
+        "username": "Raidillon55",
+        "discriminator": "3382",
+        "avatar": "2e61cbcafdb99b637b24ee265a3bc83c",
+        "bot": false,
+        "lastMessageID": null,
+        "lastMessage": null
+    },
+    "_roles": [
+        "221306137914507266"
+    ],
+    "serverDeaf": false,
+    "serverMute": false,
+    "selfMute": true,
+    "selfDeaf": false,
+    "voiceSessionID": "6c73d241a21d8e6a8782655f809de430",
+    "voiceChannelID": null,
+    "speaking": null,
+    "nickname": null,
+    "joinedTimestamp": 1465754507690,
+    "lastMessageID": null,
+    "lastMessage": null
+}

@@ -1,6 +1,6 @@
-const { winston } = require('./config');
+const { winstonLevel } = require('../config');
 const winston = require('winston');
-winston.level = winston;
+winston.level = winstonLevel;
 
 class rust{
 

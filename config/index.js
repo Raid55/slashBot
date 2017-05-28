@@ -5,9 +5,9 @@ module.exports = {
   apiaiToken: process.env.API_AI_KEY,
   googleKey: process.env.GOOGLE_API,
   mongoUrl: process.env.MONGO_URL,
+  winstonLevel: process.env.WINSTON_LEVEL,
   redisOptions:{
     url: process.env.REDIS_URL,
     password: process.env.REDIS_PASSWORD
-  },
-  winston: process.env.WINSTON
+  }
 };

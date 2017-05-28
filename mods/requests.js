@@ -2,9 +2,9 @@ const fs = require('fs');
 
 const axios = require('axios');
 
-const { winston } = require('./config');
+const { winstonLevel } = require('../config');
 const winston = require('winston');
-winston.level = winston;
+winston.level = winstonLevel;
 
 //this is a template for a mod class that works with the current way of dispatching actions and msgs
 

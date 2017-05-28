@@ -1,6 +1,6 @@
-const { winston } = require('./config');
+const { winstonLevel } = require('./config');
 const winston = require('winston');
-winston.level = winston;
+winston.level = winstonLevel;
 
 // importing the message router
 const mr = require("./utils/msgRouter.js")
@@ -151,7 +151,12 @@ it to approptiate mod with all the stuff it needs, like youtube URLS and so on..
       console.log("cool stuff a guild was just joind in tha client", guild)
     })
     .on("presenceUpdate", (old, notOld) =>{
-      console.log("I get this", old, notOld)
+      // lol its called notOld because new is a reserved word in javascript...lolololo
+      console.log(JSON.stringify(old.presence, null, 4))
+      console.log("WHAT???");
+      console.log(JSON.stringify(notOld.presence, null, 4));
+      console.log(JSON.stringify(notOld.voiceChannel, null, 4));
+      return
     })
   }
 }

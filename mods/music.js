@@ -1,12 +1,12 @@
 const fs = require('fs');
 const ytdl = require('ytdl-core');
 
-const { googleKey, winston } = require('../config');
+const { googleKey, winstonLevel } = require('../config');
 
 const axios = require('axios');
 
 const winston = require('winston');
-winston.level = winston;
+winston.level = winstonLevel;
 
 class Music{
 
